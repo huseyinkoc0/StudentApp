@@ -66,19 +66,19 @@ builder.Services.AddSwaggerGen(options =>
     // Swagger UI için baþlýk ve versiyon bilgisi
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Öðrenci Not Sistemi API", Version = "v1" });
 
- 
-
+    // 1. "Authorize" Butonunu Ekleyen Tanýmlama
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Description = "Lütfen 'Bearer ' (boþluk) ve ardýndan token'ýnýzý girin. \n\nÖrnek: 'Bearer eyJhbGciOiJIUzI1Ni...' ",
+        Description = "Lütfen 'Bearer ' (boþluk) ve ardýndan token'ýnýzý girin. \n\nÖrnek: 'Bearer eyJhbGciOiJIEnc...",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
+        Type = SecuritySchemeType.Http, // BU 'Http' OLMALI
         Scheme = "bearer",
-        BearerFormat = "JWT"    
+        BearerFormat = "JWT"
     });
 
-   
+    // 2. Kilit Simgelerini Ekleyen Gereksinim
+    // ÖNCEKÝ KARIÞIK BLOK YERÝNE BUNU KULLANIN:
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -88,17 +88,12 @@ builder.Services.AddSwaggerGen(options =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                 Scheme = "oauth2",
-                Name = "Bearer",
-                 In = ParameterLocation.Header,
+                    Id = "Bearer" // Bu 'Id', AddSecurityDefinition'daki 'Bearer' ile eþleþmeli
+                }
             },
-            new string[] {} // (Boþ scope listesi)
+            new string[] {}
         }
     });
-
-    // --- Bitiþ ---
 });
 
 var app = builder.Build();
