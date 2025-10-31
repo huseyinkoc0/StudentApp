@@ -9,7 +9,7 @@ namespace StudentApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Stud    ent")]
+    [Authorize(Roles = "Student")]
     public class StudentController : ControllerBase
     {
         private readonly ILessonService _lessonService;

@@ -55,7 +55,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = tokenOptions.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecurityKey)),
             RoleClaimType = ClaimTypes.Role
-        }; 
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Authentication failed: " + context.Exception.Message, context.Request.Headers["Authorization"]);
+                // Buraya breakpoint koyup context.Exception'ý incele
+                Console.WriteLine( context.Request.Headers["Authorization"]);
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("Token validated successfully for: " + context.Principal.Identity.Name);
+                return Task.CompletedTask;
+            }
+        };
     });
 builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
